@@ -34,15 +34,16 @@ Start the server:
 
 bash
 npm start
-Open your browser and navigate to http://localhost:3000
+Open your browser and navigate to https://flam-canva5d4176.netlify.app/
 
 Testing with Multiple Users
-Open multiple browser windows/tabs to http://localhost:3000
+Open multiple browser windows/tabs to https://flam-canva5d4176.netlify.app/
 
 Enter different usernames for each session
 
 Start drawing - you'll see real-time updates across all windows
 
 Test different tools and watch the collaboration in action!
+
 
 Project Structure

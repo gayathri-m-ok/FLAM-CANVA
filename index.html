@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 Collaborative Canvas Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Username Modal -->
+    <div id="username-modal" class="modal">
+        <div class="modal-content">
+            <h2>Welcome to Collaborative Canvas Pro! 🎨</h2>
+            <p>Enter your display name to start creating:</p>
+            <input type="text" id="username-input" placeholder="Your artist name..." maxlength="20">
+            <button id="username-submit" class="btn-primary">
+                <i class="fas fa-paint-brush"></i> Start Drawing
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><i class="fas fa-palette"></i> Collaborative Canvas Pro</h1>
+                    <p class="tagline">Create amazing art together in real-time</p>
+                </div>
+                <div class="header-controls">
+                    <div class="datetime">
+                        <span id="current-date"></span>
+                        <span id="current-time"></span>
+                    </div>
+                    <div class="connection-status">
+                        <div id="connection-indicator" class="indicator"></div>
+                        <span id="connection-status">Connecting...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu Bar -->
+            <nav class="menu-bar">
+                <div class="menu-section">
+                    <button class="menu-btn"><i class="fas fa-file"></i> File</button>
+                    <div class="dropdown-menu">
+                        <button id="save-btn"><i class="fas fa-save"></i> Save</button>
+                        <button id="download-btn"><i class="fas fa-file-download"></i> Download</button>
+                        <button id="share-btn"><i class="fas fa-share"></i> Share</button>
+                    </div>
+                </div>
+                <div class="menu-section">
+                    <button class="menu-btn"><i class="fas fa-edit"></i> Edit</button>
+                    <div class="dropdown-menu">
+                        <button id="cut-btn"><i class="fas fa-cut"></i> Cut</button>
+                        <button id="copy-btn"><i class="fas fa-copy"></i> Copy</button>
+                        <button id="paste-btn"><i class="fas fa-paste"></i> Paste</button>
+                    </div>
+                </div>
+                <div class="menu-section">
+                    <button class="menu-btn"><i class="fas fa-search"></i> View</button>
+                    <div class="dropdown-menu">
+                        <button id="zoom-in-btn"><i class="fas fa-search-plus"></i> Zoom In</button>
+                        <button id="zoom-out-btn"><i class="fas fa-search-minus"></i> Zoom Out</button>
+                        <button id="fullscreen-btn"><i class="fas fa-expand"></i> Full Screen</button>
+                        <hr>
+                        <button id="toggle-rulers-btn"><i class="fas fa-ruler"></i> Toggle Rulers</button>
+                        <button id="toggle-grid-btn"><i class="fas fa-th"></i> Toggle Grid</button>
+                        <button id="toggle-dotted-btn"><i class="fas fa-grip-dots"></i> Toggle Dotted</button>
+                    </div>
+                </div>
+                <div class="menu-section">
+                    <button class="menu-btn"><i class="fas fa-layer-group"></i> Layers</button>
+                    <div class="dropdown-menu">
+                        <button id="add-layer-btn"><i class="fas fa-plus"></i> Add Layer</button>
+                        <button id="delete-layer-btn"><i class="fas fa-trash"></i> Delete Layer</button>
+                        <button id="merge-layers-btn"><i class="fas fa-object-group"></i> Merge Layers</button>
+                    </div>
+                </div>
+                <div class="menu-section">
+                    <button class="menu-btn"><i class="fas fa-image"></i> Insert</button>
+                    <div class="dropdown-menu">
+                        <button id="insert-image-btn"><i class="fas fa-file-image"></i> Insert Image</button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <!-- Selection Tools -->
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-mouse-pointer"></i> Selection Tools</h3>
+                    <div class="tools-grid">
+                        <div class="dropdown-tool">
+                            <button class="tool-btn dropdown-toggle" id="select-toggle">
+                                <i class="fas fa-vector-square tool-icon"></i>
+                                <span class="tool-name">Select</span>
+                                <i class="fas fa-chevron-down dropdown-arrow"></i>
+                            </button>
+                            <div class="dropdown-options hidden" id="select-options">
+                                <button class="select-option" data-selection="rectangle">
+                                    <i class="fas fa-square"></i> Rectangle
+                                </button>
+                                <button class="select-option" data-selection="circle">
+                                    <i class="fas fa-circle"></i> Circle
+                                </button>
+                                <button class="select-option" data-selection="freeform">
+                                    <i class="fas fa-draw-polygon"></i> Freeform
+                                </button>
+                                <button class="select-option" data-selection="lasso">
+                                    <i class="fas fa-lasso"></i> Lasso
+                                </button>
+                            </div>
+                        </div>
+                        <button id="crop-btn" class="tool-btn" data-tool="crop">
+                            <i class="fas fa-crop-alt tool-icon"></i>
+                            <span class="tool-name">Crop</span>
+                        </button>
+                        <button id="ruler-btn" class="tool-btn" data-tool="ruler">
+                            <i class="fas fa-ruler tool-icon"></i>
+                            <span class="tool-name">Ruler</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Drawing Tools -->
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-pencil-alt"></i> Drawing Tools</h3>
+                    <div class="tools-grid">
+                        <button class="tool-btn active" data-tool="pencil" title="Pencil">
+                            <i class="fas fa-pencil-alt tool-icon"></i>
+                            <span class="tool-name">Pencil</span>
+                        </button>
+                        <button class="tool-btn" data-tool="brush" title="Brush">
+                            <i class="fas fa-paint-brush tool-icon"></i>
+                            <span class="tool-name">Brush</span>
+                        </button>
+                        <button class="tool-btn" data-tool="eraser" title="Eraser">
+                            <i class="fas fa-eraser tool-icon"></i>
+                            <span class="tool-name">Eraser</span>
+                        </button>
+                        <button class="tool-btn" data-tool="fill" title="Fill">
+                            <i class="fas fa-fill-drip tool-icon"></i>
+                            <span class="tool-name">Fill</span>
+                        </button>
+                        <button class="tool-btn" data-tool="text" title="Text">
+                            <i class="fas fa-font tool-icon"></i>
+                            <span class="tool-name">Text</span>
+                        </button>
+                        <button class="tool-btn" data-tool="picker" title="Color Picker">
+                            <i class="fas fa-eye-dropper tool-icon"></i>
+                            <span class="tool-name">Picker</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Brush Types -->
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-brush"></i> Brush Types</h3>
+                    <select id="brush-type" class="brush-type-select">
+                        <option value="round">Round Brush</option>
+                        <option value="calligraphy">Calligraphy Pen</option>
+                        <option value="oil">Oil Brush</option>
+                        <option value="watercolor">Watercolor</option>
+                        <option value="spray">Spray Paint</option>
+                        <option value="chalk">Chalk</option>
+                    </select>
+                </div>
+
+                <!-- Shapes -->
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-shapes"></i> Shapes</h3>
+                    <div class="shapes-dropdown">
+                        <button class="shapes-toggle" id="shapes-toggle">
+                            <span>Select Shape</span>
+                            <i class="fas fa-chevron-down dropdown-arrow"></i>
+                        </button>
+                        <div class="shapes-grid hidden" id="shapes-grid">
+                            <button class="shape-btn" data-shape="rectangle">
+                                <i class="fas fa-square shape-icon"></i>
+                                <span class="shape-name">Rectangle</span>
+                            </button>
+                            <button class="shape-btn" data-shape="circle">
+                                <i class="fas fa-circle shape-icon"></i>
+                                <span class="shape-name">Circle</span>
+                            </button>
+                            <button class="shape-btn" data-shape="line">
+                                <i class="fas fa-minus shape-icon"></i>
+                                <span class="shape-name">Line</span>
+                            </button>
+                            <button class="shape-btn" data-shape="triangle">
+                                <i class="fas fa-play fa-rotate-270 shape-icon"></i>
+                                <span class="shape-name">Triangle</span>
+                            </button>
+                            <button class="shape-btn" data-shape="star">
+                                <i class="fas fa-star shape-icon"></i>
+                                <span class="shape-name">Star</span>
+                            </button>
+                            <button class="shape-btn" data-shape="arrow">
+                                <i class="fas fa-arrow-right shape-icon"></i>
+                                <span class="shape-name">Arrow</span>
+                            </button>
+                            <button class="shape-btn" data-shape="ellipse">
+                                <i class="fas fa-ellipsis-h shape-icon"></i>
+                                <span class="shape-name">Ellipse</span>
+                            </button>
+                            <button class="shape-btn" data-shape="polygon">
+                                <i class="fas fa-draw-polygon shape-icon"></i>
+                                <span class="shape-name">Polygon</span>
+                            </button>
+                            <button class="shape-btn" data-shape="heart">
+                                <i class="fas fa-heart shape-icon"></i>
+                                <span class="shape-name">Heart</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Colors -->
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-palette"></i> Colors</h3>
+                    <div class="color-picker-container">
+                        <input type="color" id="color-picker" value="#ff4757">
+                        <div class="recent-colors">
+                            <h4>Recent Colors</h4>
+                            <div class="recent-colors-grid" id="recent-colors">
+                                <!-- Recent colors will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Brush Size -->
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-ruler"></i> Brush Size</h3>
+                    <div class="brush-size-control">
+                        <input type="range" id="brush-size" min="1" max="50" value="5">
+                        <div class="brush-size-display">
+                            <span id="brush-size-value">5px</span>
+                            <div class="brush-preview" id="brush-preview"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Styling -->
+                <div class="sidebar-section text-styling hidden" id="text-styling">
+                    <h3><i class="fas fa-text-height"></i> Text Style</h3>
+                    <div class="text-controls">
+                        <label>Size:</label>
+                        <input type="range" id="text-size" min="12" max="72" value="24">
+                        <label>Font:</label>
+                        <select id="text-font">
+                            <option value="Arial">Arial</option>
+                            <option value="Helvetica">Helvetica</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Verdana">Verdana</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Comic Sans MS">Comic Sans MS</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-bolt"></i> Actions</h3>
+                    <div class="actions-grid">
+                        <button id="undo-btn" class="action-btn" title="Undo">
+                            <i class="fas fa-undo action-icon"></i>
+                            Undo
+                        </button>
+                        <button id="redo-btn" class="action-btn" title="Redo">
+                            <i class="fas fa-redo action-icon"></i>
+                            Redo
+                        </button>
+                        <button id="clear-btn" class="action-btn clear" title="Clear Canvas">
+                            <i class="fas fa-trash action-icon"></i>
+                            Clear
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Layers Panel -->
+                <div class="sidebar-section layers-panel">
+                    <h3><i class="fas fa-layer-group"></i> Layers</h3>
+                    <div id="layers-list" class="layers-list">
+                        <!-- Layers will be populated here -->
+                    </div>
+                    <div class="layer-actions">
+                        <button id="add-layer-btn-sidebar" class="btn-secondary">
+                            <i class="fas fa-plus"></i> Add Layer
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Online Users -->
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-users"></i> Online Artists</h3>
+                    <div id="users-list" class="users-list">
+                        <!-- Users will be populated here -->
+                    </div>
+                    <div class="user-count">
+                        <span id="user-count">0 artists online</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Canvas Area -->
+            <div class="canvas-area">
+                <div class="canvas-wrapper">
+                    <div class="canvas-container-wrapper">
+                        <!-- Rulers -->
+                        <div class="ruler horizontal-ruler hidden" id="horizontal-ruler"></div>
+                        <div class="ruler vertical-ruler hidden" id="vertical-ruler"></div>
+                        
+                        <div class="canvas-container" id="canvas-container">
+                            <!-- Grid Background -->
+                            <div class="grid-background hidden" id="grid-background"></div>
+                            <div class="dotted-background hidden" id="dotted-background"></div>
+                            
+                            <canvas id="drawing-canvas"></canvas>
+                            <canvas id="cursor-layer"></canvas>
+                            <canvas id="selection-layer"></canvas>
+                            <canvas id="object-layer"></canvas>
+                            <canvas id="ruler-layer"></canvas>
+                            
+                            <div class="canvas-overlay">
+                                <div class="welcome-message" id="welcome-message">
+                                    <h2>Welcome to Collaborative Canvas Pro! 🎨</h2>
+                                    <p>Start drawing or open this page in another browser to collaborate with others</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="canvas-stats">
+                    <span id="fps-counter">60 FPS</span>
+                    <span id="zoom-level">100%</span>
+                    <span id="coordinates">X: 0, Y: 0</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Text Input Container -->
+    <div id="text-input-container" class="text-input-container hidden">
+        <textarea id="text-input" placeholder="Enter your text here..."></textarea>
+        <div class="text-controls">
+            <button id="text-confirm" class="btn-primary">
+                <i class="fas fa-check"></i> Add Text
+            </button>
+            <button id="text-cancel" class="btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+        </div>
+    </div>
+
+    <!-- Image Upload Input -->
+    <input type="file" id="image-upload" accept="image/*" style="display: none;">
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="websocket.js"></script>
+    <script src="canvas.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
